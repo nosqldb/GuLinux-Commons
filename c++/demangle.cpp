@@ -18,13 +18,21 @@
 
 #include "demangle.h"
 #include <stdlib.h>
+
+#ifdef __GNUC__
 #include <cxxabi.h>
+#endif
 
 using namespace GuLinux;
 using namespace std;
 
-GuLinux::Demangle::Demangle(const string &mangled) : demangled(abi::__cxa_demangle(mangled.c_str(), 0, 0, &_status))
+GuLinux::Demangle::Demangle(const string &mangled)
 {
+#ifdef __GNUC__
+    demangled = abi::__cxa_demangle(mangled.c_str(), 0, 0, &_status);
+#else
+    demangled = const_cast<char*>(mangled.c_str());
+#endif
 }
 
 GuLinux::Demangle::~Demangle()
