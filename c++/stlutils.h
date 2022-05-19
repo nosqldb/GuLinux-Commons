@@ -107,7 +107,7 @@ private:
 }
 #define CUR_POS std::string{__FUNCTION__} + " " + std::string{__FILE__} + " "
 #define CREATE_BENCHMARK_BASE(name, out_function) \
-  auto name = make_shared<GuLinux::benchmark>(#name, out_function)
+  auto name = std::make_shared<GuLinux::benchmark>(#name, out_function)
   
 
 #define BENCH(name) CREATE_BENCHMARK_BASE(name, [](const std::string &s){ std::cerr << s << std::endl; })

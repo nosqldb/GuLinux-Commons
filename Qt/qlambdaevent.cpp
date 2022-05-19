@@ -19,20 +19,18 @@
 
 #include "qlambdaevent.h"
 
-using namespace std;
-
 class QLambdaEvent::Private {
 public:
-  Private(const function<void()>& process_event, const function< void()> &after_processed, QLambdaEvent *q);
-  function<void()> process_event;
-  function< void()> after_processed;
+  Private(const std::function<void()>& process_event, const std::function< void()> &after_processed, QLambdaEvent *q);
+  std::function<void()> process_event;
+  std::function< void()> after_processed;
 private:
   QLambdaEvent *q;
 };
 
 QEvent::Type QLambdaEvent::type = static_cast<QEvent::Type>(QEvent::User + 1);
 
-QLambdaEvent::Private::Private(const function<void()>& process_event, const function< void()> &after_processed, QLambdaEvent* q) 
+QLambdaEvent::Private::Private(const std::function<void()>& process_event, const std::function< void()> &after_processed, QLambdaEvent* q)
   : process_event{process_event}, after_processed{after_processed}, q{q}
 {
 
@@ -45,7 +43,7 @@ QLambdaEvent::~QLambdaEvent()
     d->after_processed();
 }
 
-QLambdaEvent::QLambdaEvent(const function<void()>& process_event, const function< void()> &after_processed): QEvent(type), dptr(process_event, after_processed, this)
+QLambdaEvent::QLambdaEvent(const std::function<void()>& process_event, const std::function< void()> &after_processed): QEvent(type), dptr(process_event, after_processed, this)
 {
 }
 

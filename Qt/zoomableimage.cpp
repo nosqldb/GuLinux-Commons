@@ -36,8 +36,6 @@
 #include <QAction>
 #include <functional>
 
-using namespace std;
-
 class ZoomableImage::Private {
 public:
   class GraphicsView : public QGraphicsView {
@@ -102,10 +100,10 @@ ZoomableImage::ZoomableImage(bool embed_toolbar, QWidget* parent) : QWidget(pare
   auto zoomBestFitAction = d->toolbar->addAction(QIcon::fromTheme("zoom-fit-best"), tr("Fit Window"));
   auto zoomOriginalAction =d->toolbar->addAction(QIcon::fromTheme("zoom-original"), tr("Original Size"));
   d->actions = {{ZoomIn, zoomInAction}, {ZoomOut, zoomOutAction}, {ZoomFit, zoomBestFitAction}, {ZoomRealSize, zoomOriginalAction}};
-  connect(zoomInAction, &QAction::triggered, bind(&ZoomableImage::scale, this, 1.2));
-  connect(zoomOutAction, &QAction::triggered, bind(&ZoomableImage::scale, this, 0.8));
-  connect(zoomBestFitAction, &QAction::triggered, bind(&ZoomableImage::fitToWindow, this));
-  connect(zoomOriginalAction, &QAction::triggered, bind(&ZoomableImage::normalSize, this));
+  connect(zoomInAction, &QAction::triggered, std::bind(&ZoomableImage::scale, this, 1.2));
+  connect(zoomOutAction, &QAction::triggered, std::bind(&ZoomableImage::scale, this, 0.8));
+  connect(zoomBestFitAction, &QAction::triggered, std::bind(&ZoomableImage::fitToWindow, this));
+  connect(zoomOriginalAction, &QAction::triggered, std::bind(&ZoomableImage::normalSize, this));
   d->toolbar->setEnabled(false);
   layout()->addWidget(d->view = new Private::GraphicsView(this, this));
   d->view->setScene(&d->scene);

@@ -21,13 +21,13 @@
 #include <execinfo.h>
 #include "demangle.h"
 #include <mutex>
-using namespace std;
+
 using namespace GuLinux::Backtrace;
 
 Frame::vector GuLinux::Backtrace::backtrace(uint32_t max_frames, uint32_t skip)
 {
   static mutex _mutex;
-  unique_lock<mutex> lock(mutex);
+  std::unique_lock<mutex> lock(mutex);
   skip++; // we have to skip current frame, at least
   std::vector<void*> addresses(max_frames + skip);
   int num_addresses = ::backtrace(addresses.data(), addresses.size());
@@ -43,7 +43,7 @@ Frame::vector GuLinux::Backtrace::backtrace(uint32_t max_frames, uint32_t skip)
   }
   free(symbols);
   Frame::vector filtered_frames(frames.size() - skip);
-  move(frames.begin() + skip, frames.end(), filtered_frames.begin());
+  std::move(frames.begin() + skip, frames.end(), filtered_frames.begin());
   return filtered_frames;
 }
 
@@ -61,9 +61,9 @@ std::string Frame::function() const
   size_t closing_parenthesis = symbol.find(')');
   if(opening_parenthesis == string::npos || closing_parenthesis == string::npos)
     return{};
-  string function_mangled = symbol.substr(opening_parenthesis+1, closing_parenthesis-opening_parenthesis-1);
+  std::string function_mangled = symbol.substr(opening_parenthesis+1, closing_parenthesis-opening_parenthesis-1);
   size_t plus_index = function_mangled.find('+');
-  string offset;
+  std::string offset;
   if( plus_index != string::npos) {
     offset = function_mangled.substr(plus_index, function_mangled.size()-plus_index-1);
     function_mangled = function_mangled.substr(0, plus_index);
@@ -73,13 +73,13 @@ std::string Frame::function() const
 }
 
 
-ostream &operator<<(ostream& o, const Frame& frame)
+std::ostream &operator<<(std::ostream& o, const Frame& frame)
 {
   o << "address: " << frame.address << ", file: " << frame.file() << ", function: " << frame.function() ; //<< ", symbol: [[" << frame.symbol << "]]";
   return o;
 }
 
-ostream &operator<<(ostream& o, const Frame::vector& frames)
+std::ostream &operator<<(std::ostream& o, const Frame::vector& frames)
 {
   int index = 0;
   for(auto &frame: frames) {

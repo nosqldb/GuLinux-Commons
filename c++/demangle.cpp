@@ -24,9 +24,8 @@
 #endif
 
 using namespace GuLinux;
-using namespace std;
 
-GuLinux::Demangle::Demangle(const string &mangled)
+GuLinux::Demangle::Demangle(const std::string &mangled)
 {
 #ifdef __GNUC__
     demangled = abi::__cxa_demangle(mangled.c_str(), 0, 0, &_status);
@@ -47,7 +46,7 @@ const char * GuLinux::Demangle::c_str() const
   return demangled;
 }
 
-string GuLinux::Demangle::get() const
+std::string GuLinux::Demangle::get() const
 {
   return {demangled};
 }
