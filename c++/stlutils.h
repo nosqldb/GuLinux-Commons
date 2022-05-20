@@ -52,9 +52,9 @@ public:
    : name(name),
    print_every(1), 
    print_function(print_function), 
-   started{std::chrono::steady_clock::now()},
+   unit_suffix{ "s" },
    unit_ratio{1},
-   unit_suffix{"s"}
+   started{ std::chrono::steady_clock::now() }
   {
   }
   ~benchmark() {
